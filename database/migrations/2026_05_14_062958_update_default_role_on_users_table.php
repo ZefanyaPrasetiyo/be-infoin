@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('conversations', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('users', function (Blueprint $table) {
+            $table->enum('role', ['admin', 'user', 'superadmin'])->default('user')->change();
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conversations');
+        Schema::table('users', function (Blueprint $table) {
+            $table->enum('role', ['admin', 'user', 'superadmin'])->default('null')->change();
+        });
     }
 };

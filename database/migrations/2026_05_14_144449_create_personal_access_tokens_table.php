@@ -11,19 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('history_comments', function (Blueprint $table) {
+        Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlId("id_user")->constrained("users")->onDelete("cascade");
-            $table->foreignUlId("id_komentar")->constrained("comments")->onDelete("cascade");
+            $table->morphs('tokenable');
+            $table->text('name');
+            $table->string('token', 64)->unique();
+            $table->text('abilities')->nullable();
+            $table->timestamp('last_used_at')->nullable();
+            $table->timestamp('expires_at')->nullable()->index();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('history_comments');
+        Schema::dropIfExists('personal_access_tokens');
     }
 };

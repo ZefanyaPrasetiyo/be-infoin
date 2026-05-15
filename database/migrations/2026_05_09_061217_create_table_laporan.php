@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reports', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("id_user")->constrained("users")->onDelete("cascade");
-            $table->foreignId("id_kategori")->constrained("kategori")->onDelete("cascade");
+            $table->ulid('id')->primary();
+            $table->foreignUlId("id_user")->constrained("users")->onDelete("cascade");
+            $table->foreignUlId("id_kategori")->constrained("kategori")->onDelete("cascade");
             $table->text('deskripsi');
             $table->string('bukti_laporan')->nullable();
             $table->enum('status', ["menunggu", "diproses", "disetujui"])->default("menunggu");

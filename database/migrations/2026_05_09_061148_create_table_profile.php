@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profile', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("id_user")->constrained("users")->onDelete("cascade");
+            $table->ulid('id')->primary();
+            $table->foreignUlId("id_user")->constrained("users")->onDelete("cascade");
             $table->string('nama_panjang');
             $table->string('foto_profile')->nullable();
             $table->string('bio')->nullable();

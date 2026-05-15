@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 
 #[Fillable(['id_user', 'id_report', 'message', 'id_parent'])]
 class Comment extends Model
 {
+      protected $keyType = 'string';
+
+    public $incrementing = false;
     /**
      * Relasi ke User yang menulis komentar
      */

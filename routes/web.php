@@ -1,5 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\userController;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', function(){
+    return 'selamat datang';
+});

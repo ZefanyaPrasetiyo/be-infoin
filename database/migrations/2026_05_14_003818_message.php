@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("id_conversation")->constrained("conversations")->onDelete("cascade");
-            $table->foreignId("id_user")->constrained("users")->onDelete("cascade");
+            $table->ulid('id')->primary();
+            $table->foreignUlId("id_conversation")->constrained("conversations")->onDelete("cascade");
+            $table->foreignUlId("id_user")->constrained("users")->onDelete("cascade");
             $table->text('message');
             $table->boolean('is_read')->default(false);
             $table->timestamps();

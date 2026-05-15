@@ -12,11 +12,11 @@
         public function up(): void
         {
             Schema::create('comments', function (Blueprint $table) {
-                $table->id();
-                $table->foreignId("id_user")->constrained("users")->onDelete("cascade");
-                $table->foreignId("id_report")->constrained("reports")->onDelete("cascade");
+                $table->ulid('id')->primary();
+                $table->foreignUlId("id_user")->constrained("users")->onDelete("cascade");
+                $table->foreignUlId("id_report")->constrained("reports")->onDelete("cascade");
                 $table->text('message')->nullable();
-                $table->foreignId("id_parent")->nullable()->constrained("comments")->onDelete("cascade");
+                $table->foreignUlId("id_parent")->nullable()->constrained("comments")->onDelete("cascade");
 
                 $table->timestamps();
                 $table->softDeletes();
