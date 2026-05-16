@@ -14,10 +14,10 @@ Route::get('/email/verify/{id}/{hash}', function(EmailVerificationRequest $reque
     return response()->json(['message'=>'email berhasil diverifikasi?']);
 })->middleware(['signed'])->name('verification.verify');
 
-Route::post('/users', [userController::class, 'createUsers']);
-Route::get('/users', [userController::class, 'getAllUser']);
 
 Route::middleware('auth:api')->group(function(){    
+Route::post('/users', [userController::class, 'createUsers']);
+Route::get('/users', [userController::class, 'getAllUser']);
 Route::get('/users/{id}', [userController::class, 'getUserById']);
 Route::put('/users/{id}', [userController::class, 'updateUsers']);
 Route::delete('/users/{id}', [userController::class, 'deleteUsers']);
