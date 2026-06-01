@@ -13,10 +13,15 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        //
+   public function register(): void
+{
+    // Tambahkan baris ini bray untuk nge-fix path asset di Vercel
+    if (env('APP_ENV') === 'production') {
+        $this->app->bind('path.public', function () {
+            return base_path('public');
+        });
     }
+}
 
     /**
      * Bootstrap any application services.
