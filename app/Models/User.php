@@ -12,12 +12,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['nama_panjang', 'email', 'password', 'nomor_telepon', 'role', 'id_location'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasUlids;
+    use HasApiTokens, HasFactory, Notifiable, HasUlids;
     
     protected $keyType = 'string';
     public $incrementing = false;
