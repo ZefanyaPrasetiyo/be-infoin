@@ -4,11 +4,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\ApiKeyMiddleware;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        api: __DIR__.'/../routes/api.php', // Langsung pake api, tanpa then
+        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
@@ -17,13 +17,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'api.key' => ApiKeyMiddleware::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions) {
-        // Return JSON buat semua error
-        $exceptions->render(function (Throwable $e, $request) {
+    ->withExceptions(function (Exceptions $exceptions): void {
+        // MATIKAN VIEW ERROR PAGE - Return JSON semua error
+        $exceptions->render(function (Throwable $e, Request $request) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
-                'type' => class_basename($e),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
             ], 500);
         });
     })
