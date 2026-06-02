@@ -12,13 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            // Kita panggil rute api manual tanpa prefix dan tanpa auth global bray!
-            Route::middleware('api')
-                ->group(__DIR__.'/../routes/api.php');
+            // Kita load rute api secara manual polosan tanpa dibungkus middleware string 'api' di sini bray
+            Route::group([], __DIR__.'/../routes/api.php');
         },
     )
-    ->withViews() // <--- Ini wajib biar gak eror "Target class [view] does not exist"
     ->withMiddleware(function (Middleware $middleware): void {
+        // Kita daftarkan alias middleware API Key lu di sini bray
         $middleware->alias([
             'api.key' => ApiKeyMiddleware::class,
         ]);
