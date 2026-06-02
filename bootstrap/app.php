@@ -17,6 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // Cukup ini aja, Laravel 13 otomatis return JSON untuk API requests
+        // KOSONGKAN - jangan pake render atau shouldRenderJsonWhen
     })
     ->create();
