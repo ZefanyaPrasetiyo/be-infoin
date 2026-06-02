@@ -15,3 +15,9 @@ Route::delete('/users/{id}', [userController::class, 'deleteUsers']);
 
 Route::post('/register', [authController::class, 'Register']);
 Route::post('/login', [authController::class, 'Login']);
+
+Route::get('/', function () {
+    return response()->json([
+        'message' => 'Welcome to the API king huahuha'
+    ]);
+});
