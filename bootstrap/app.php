@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\ApiKeyMiddleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,11 +12,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias([
-            'api.key' => ApiKeyMiddleware::class,
-        ]);
+        //
     })
-    ->withExceptions(function (Exceptions $exceptions) {
-        // KOSONGKAN - jangan pake render atau shouldRenderJsonWhen
+    ->withExceptions(function (Exceptions $exceptions): void {
+        // Tangkap semua error dan return JSON
+        $exceptions->render(function (Throwable $e, Request $request) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 500);
+        });
     })
     ->create();
