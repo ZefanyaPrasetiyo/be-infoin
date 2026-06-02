@@ -39,32 +39,39 @@ class authController extends Controller
         }
     }
 
-    public function Login(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required'
-    ]);
+  public function Login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
-    $user = User::where('email', $request->email)->first();
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return response()->json([
-            'message'=> "Login gagal, Pastikan email dan password benar"
-        ], 401);
+        $user = User::where('email', $request->email)->first();
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message'=> "Login gagal, Pastikan email dan password benar"
+            ], 401);
+        }
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'message'=>'Email belum diverifikasi, silakan check email anda'
+            ], 403);
+        }
+
+        try {
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Login berhasil',
+                'token' => $token,
+                'user' => $user
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Gagal generate token, pastikan table personal_access_tokens sudah di-migrate di TiDB Cloud.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-
-    if (!$user->hasVerifiedEmail()) {
-        return response()->json([
-            'message'=>'Email belum diverifikasi, silakan check email anda'
-        ], 403);
-    }
-
-    $token = $user->createToken('auth_token')->plainTextToken;
-
-    return response()->json([
-        'message' => 'Login berhasil',
-        'token' => $token,
-        'user' => $user
-    ], 200);
-}
 }
