@@ -1,25 +1,22 @@
 <?php
 
-// Matikan semua error view
-error_reporting(0);
-ini_set('display_errors', 0);
+// api/index.php - ultra minimal
 
-// Override view resolver SEBELUM Laravel jalan
-$app = require __DIR__ . '/../bootstrap/app.php';
+use Illuminate\Http\Request;
 
-// Bind view ke null biar gak error
-$app->bind('view', function() {
-    return new class {
-        public function make($view, $data = []) {
-            return response()->json(['error' => 'View not found'], 404);
-        }
-    };
+// Load Laravel
+require __DIR__ . '/../vendor/autoload.php';
+$app = require_once __DIR__ . '/../bootstrap/app.php';
+
+// Override view dengan null
+$app->singleton('view', function() {
+    return null;
 });
 
-// Jalanin request
+// Handle request
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 $response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
+    $request = Request::capture()
 );
 $response->send();
 $kernel->terminate($request, $response);
