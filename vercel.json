@@ -1,6 +1,6 @@
 {
     "version": 2,
-     "framework": null,
+    "framework": null,
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.7.1"
@@ -8,20 +8,17 @@
     },
     "routes": [
         {
-            "src": "/backend/(.*)",
-            "dest": "/api/index.php"
-        },
-        {
             "src": "/(.*)",
             "dest": "/api/index.php"
         }
-    ],"env": {
-                "APP_DEBUG": "false",
+    ],
+    "env": {
         "APP_ENV": "production",
+        "APP_DEBUG": "false",
+        "APP_KEY": "base64:YOUR_APP_KEY_HERE",
         "LOG_CHANNEL": "stderr",
         "CACHE_DRIVER": "array",
-        "SESSION_DRIVER": "array"
-    },
-    "outputDirectory": "",
-    "installCommand": ""
+        "SESSION_DRIVER": "array",
+        "VIEW_COMPILED_PATH": "/tmp"
+    }
 }
