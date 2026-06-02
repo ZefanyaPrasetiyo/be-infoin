@@ -20,7 +20,8 @@
         "APP_ENV": "production",
         "LOG_CHANNEL": "stderr",
         "CACHE_DRIVER": "array",
-        "SESSION_DRIVER": "array"
+        "SESSION_DRIVER": "array",
+        "VIEW_COMPILED_PATH": "/tmp/views"
     },
     "outputDirectory": "",
     "installCommand": ""
