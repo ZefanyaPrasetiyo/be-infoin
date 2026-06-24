@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignUlId("id_user")->constrained("users")->onDelete("cascade");
             $table->foreignUlId("id_kategori")->constrained("categories")->onDelete("cascade");
             $table->text('deskripsi');
-            $table->text('Judul Laporan');
-            $table->enum('status', ["menunggu", "diproses", "disetujui"])->default("menunggu");
+            $table->text('judul_laporan');
+            $table->enum('status', ["menunggu", "diproses", "disetujui", "ditolak"])->default("menunggu");
            $table->json('bukti_laporan');
             $table->text('catatan');
             $table->timestamps();

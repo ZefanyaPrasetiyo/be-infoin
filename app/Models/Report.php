@@ -11,11 +11,16 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 #[Fillable(['kode_report', 'id_user', 'id_kategori', 'deskripsi', 'judul_laporan', 'status', 'bukti_laporan', 'catatan'])]
 
+
 class Report extends Model
 {
     use HasUlids, SoftDeletes; 
     protected $keyType = 'string';
     public $incrementing = false;
+
+    protected $casts = [
+        'bukti_laporan' => 'array',
+    ];
 
     public function detail(): HasOne
     {
@@ -32,4 +37,5 @@ class Report extends Model
     {
         return $this->belongsTo(Category::class, 'id_kategori');
     }
+
 }

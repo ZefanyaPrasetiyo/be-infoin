@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->text('alamat')->nullable();
+            $table->foreignUlid('id_location')->constrained("locations")->onDelete("cascade");
             $table->string('kepercayaan_ai')->nullable();
             $table->string('label_ai')->nullable();
             $table->timestamps();

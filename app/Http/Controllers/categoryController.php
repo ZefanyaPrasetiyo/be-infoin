@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class categoryController extends Controller
 {
@@ -18,6 +19,7 @@ class categoryController extends Controller
                 'data' => $categories
             ], 200);
         } catch (\Exception $e) {
+            Log::error('Error fetching categories: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Internal Server Error'
@@ -25,21 +27,21 @@ class categoryController extends Controller
         }
     }
 
-    public function getCategoriesById($index, $id)
+    public function getCategoriesById($id)
     {
         try {
-            $category = Category::FindOrFail($id, $index);
-            if (!$category) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Category tidak ditemukan'
-                ], 404);
-            }
+            $category = Category::findOrFail($id);
             return response()->json([
                 'success' => true,
                 'data' => $category
             ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category tidak ditemukan'
+            ], 404);
         } catch (\Exception $e) {
+            Log::error('Error fetching category by ID: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Internal Server Error'
@@ -51,8 +53,8 @@ class categoryController extends Controller
     {
         try {
             $request->validate([
-                'nama' => 'required|string|unique',
-                'kode_kategori' => 'required|string|unique'
+                'nama' => 'required|string|unique:categories,nama',
+                'kode_kategori' => 'required|string|unique:categories,kode_kategori'
             ]);
 
             $category = Category::create([
@@ -73,6 +75,7 @@ class categoryController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
+            Log::error('Error creating category: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Internal Server Error'
@@ -84,15 +87,17 @@ class categoryController extends Controller
     {
         try {
             $request->validate([
-                'nama' => 'required|string|unique',
-                'kode_kategori' => 'required|string|unique'
+                'nama' => 'required|string|unique:categories,nama,' . $id,
+                'kode_kategori' => 'required|string|unique:categories,kode_kategori,' . $id
             ]);
-           $category = Category::FindOrFail($id);
-           $category->update([
+            
+            $category = Category::findOrFail($id);
+            $category->update([
                 'nama'=> $request->nama,
-                 'kode_kategori' => $request->kode_kategori,
+                'kode_kategori' => $request->kode_kategori,
                 'slug' => Str::slug($request->nama)
-           ]);
+            ]);
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Category berhasil diperbarui',
@@ -104,7 +109,13 @@ class categoryController extends Controller
                 'message' => 'Validasi gagal',
                 'errors' => $e->errors()
             ], 422);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category tidak ditemukan'
+            ], 404);
         } catch (\Exception $e) {
+            Log::error('Error updating category: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Internal Server Error'
@@ -116,18 +127,18 @@ class categoryController extends Controller
     {
         try {
             $category = Category::findOrFail($id);
-            if (!$category) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Category tidak ditemukan'
-                ], 404);
-            }
             $category->delete();
             return response()->json([
                 'success' => true,
                 'message' => 'Category berhasil dihapus'
             ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category tidak ditemukan'
+            ], 404);
         } catch (\Exception $e) {
+            Log::error('Error deleting category: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Internal Server Error'
@@ -144,6 +155,7 @@ class categoryController extends Controller
                 'data' => $categories
             ], 200);
         } catch (\Exception $e) {
+            Log::error('Error fetching deleted categories: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Internal Server Error'
@@ -154,21 +166,20 @@ class categoryController extends Controller
     public function restoreDeletedCategory($id)
     {
         try {
-            $category = Category::onlyTrashed()->FindOrFail($id);
-            if (!$category) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Category sampah tidak ditemukan'
-                ], 404);
-            }
-
+            $category = Category::onlyTrashed()->findOrFail($id);
             $category->restore();
             return response()->json([
                 'success' => true,
                 'message' => 'Category berhasil dikembalikan',
                 'data' => $category
             ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category sampah tidak ditemukan'
+            ], 404);
         } catch (\Exception $e) {
+            Log::error('Error restoring deleted category: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Internal Server Error'

@@ -17,7 +17,7 @@ class Comment extends Model
 
     public $incrementing = false;
 
-    use SoftDeletes;
+    use SoftDeletes, HasUlids;
     public function user(): BelongsTo
     {
         return $this->BelongsTo(User::class, 'id_user');
@@ -31,5 +31,9 @@ class Comment extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(Comment::class, 'id_parent');
+    }
+    public function parent(): BelongsTo
+    {
+    return $this->BelongsTo(Comment::class, 'id_parent');
     }
 }

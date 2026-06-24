@@ -22,7 +22,7 @@ class SightengineService
             file_get_contents($imagePath),
             basename($imagePath)
         )->post('https://api.sightengine.com/1.0/check.json', [
-            'models' => 'nudity-2.1,weapon,gore',
+            'models' => 'nudity-2.1,weapon,gore,genai',
             'api_user' => $this->apiUser,
             'api_secret' => $this->apiSecret,
         ]);

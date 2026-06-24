@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('nomor_telepon')->nullable();
             $table->enum('role', ['admin', 'user', 'petugas'])->default('user');
-            $table->foreignUlId("id_location")->nullable()->constrained("locations");
+            $table->foreignUlid("id_location")->nullable()->constrained("locations");
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 
 #[Fillable(['id_laporan', 'status', 'id_laporan'])] 
-class History extends Model
+class HistoryReports extends Model
 {
       protected $keyType = 'string';
 

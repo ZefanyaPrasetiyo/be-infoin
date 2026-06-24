@@ -17,7 +17,8 @@ class authController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
             'nomor_telepon' => 'required|string',
-            'role' => 'sometimes|in:admin,user'
+            'role' => 'sometimes|in:admin,user',
+            'id_location' => 'required|string',
         ]);
         try {
             $user = User::create([
@@ -25,7 +26,8 @@ class authController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'nomor_telepon' => $request->nomor_telepon,
-                'role' => $request->role ?? 'user'
+                'role' => $request->role ?? 'user',
+                'id_location'=> $request->id_location,
             ]);
             $user->sendEmailVerificationNotification();
             return response()->json([
@@ -53,11 +55,11 @@ class authController extends Controller
             ], 401);
         }
 
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json([
-                'message'=>'Email belum diverifikasi, silakan check email anda'
-            ], 403);
-        }
+        // if (!$user->hasVerifiedEmail()) {
+        //     return response()->json([
+        //         'message'=>'Email belum diverifikasi, silakan check email anda'
+        //     ], 403);
+        // }
 
         try {
             $token = $user->createToken('auth_token')->plainTextToken;
